@@ -1,0 +1,415 @@
+schema {
+  query: RootQuery
+  mutation: RootMutation
+}
+
+type AccessToken {
+  accessToken: String
+}
+
+type Address {
+  addressId: String
+  city: String
+  contact: Boolean
+  country: String
+  createdOn: String
+  modifiedOn: String
+  name: String
+  postal: String
+  state: String
+  street: String
+  street2: String
+  verified: Boolean
+}
+
+type AddressResultsType {
+  edges: [UserAddressNodeType]
+  metrics: ConnectionMetrics
+  pageInfo: PageInfoType
+  totalCount: Int
+}
+
+type Attribute {
+  attributeId: String
+  createdOn: String
+  modifiedOn: String
+  name: String
+  value: String
+}
+
+type AttributeResultsType {
+  edges: [UserAttributeNodeType]
+  metrics: ConnectionMetrics
+  pageInfo: PageInfoType
+  totalCount: Int
+}
+
+input ConditionInputType {
+  name: ValidString!
+  type: conditionTypeENUM!
+  value: ValidString!
+}
+
+"""User access policy for Publisher resources"""
+type ConditionType {
+  name: String
+  type: String
+  value: String
+}
+
+enum conditionTypeENUM {
+  """
+  This is based on the Golang package found here: https://golang.org/pkg/regexp/.  
+  			The syntax accepted by RE2 and described at https://golang.org/s/re2syntax 
+  """
+  REGEX
+
+  """This is a Network CIDR notation."""
+  CIDR
+}
+
+type ConnectionMetrics {
+  queryTime: String
+  requestTime: String
+}
+
+type Email {
+  address: String
+  contact: Boolean
+  createdOn: String
+  emailId: String
+  modifiedOn: String
+  verified: Boolean
+}
+
+type EmailResultsType {
+  edges: [UserEmailNodeType]
+  metrics: ConnectionMetrics
+  pageInfo: PageInfoType
+  totalCount: Int
+}
+
+"""The `NaturalNumber` scalar type represents a natural number value."""
+scalar NaturalNumber
+
+"""The email will be validated for format convention"""
+scalar New_Valid_Email
+
+type PageInfoType {
+  endCursor: Int
+  hasNextPage: Boolean
+}
+
+"""User access policy for Publisher resources"""
+type Policy {
+  actions: [String]
+  conditions: [ConditionType]
+  createdOn: String
+  description: String
+  effect: String
+  modifiedOn: String
+  name: String
+  policyId: ValidUUID
+  publisherId: ValidUUID
+  resources: [String]
+}
+
+type PolicyID {
+  policyId: ValidUUID
+}
+
+type PolicyNodeType {
+  cursor: Int
+  node: Policy
+}
+
+type PolicyResultsType {
+  edges: [PolicyNodeType]
+  metrics: ConnectionMetrics
+  pageInfo: PageInfoType
+  totalCount: Int
+}
+
+type PublisherID {
+  publisherId: ValidUUID
+}
+
+type RootMutation {
+  """Create an address"""
+  createAddress(state: String!, postal: String!, country: String!, contact: Boolean!, name: ValidString!, street: String!, street2: String!, city: String!): Address
+
+  """Create a new attribute"""
+  createAttribute(name: UserAttributesEnum!, value: ValidString!): Attribute
+
+  """Creates a new email"""
+  createEmail(address: New_Valid_Email!, contact: Boolean!): Email
+
+  """Creates a new phone record"""
+  createPhone(number: ValidString!, name: ValidString!, contact: Boolean!): UserPhone
+
+  """Creates a new policy"""
+  createPolicy(resources: [ValidString]!, actions: [ValidString]!, conditions: [ConditionInputType], publisherId: ValidUUID!, name: ValidString!, effect: ValidString!, description: ValidString!): PolicyID
+
+  """Reset user credentials"""
+  credentials(password: ValidString!): Boolean
+
+  """Deletes an address"""
+  deleteAddress(addressId: ValidUUID!): Address
+
+  """Delete an attribute"""
+  deleteAttribute(attribute_id: ValidString!): Attribute
+
+  """Deletes an email"""
+  deleteEmail(emailId: ValidUUID!): Email
+
+  """Deletes a phone record"""
+  deletePhone(phoneId: ValidUUID!): UserPhone
+
+  """Delete an attribute"""
+  deleteUserAttribute(attribute_id: ValidString!): Attribute
+
+  """Login a user"""
+  login(username: ValidString!, password: ValidString!): Token
+
+  """
+  Logout a particular user.  All tokens belonging to requester will be deleted.
+  """
+  logout: Boolean
+
+  """
+  Return a new access token. A refresh token is needed for this operation
+  """
+  refresh: AccessToken
+
+  """Register a new user"""
+  register(avatar: ValidString, password: ValidString!, username: ValidString!): Token
+
+  """Register a new publisher"""
+  registerPublisher(name: ValidString!): PublisherID
+
+  """Update an address"""
+  updateAddress(addressId: ValidUUID!, name: ValidString, street: ValidString, street2: String, city: ValidString, state: ValidString, postal: ValidString, country: ValidString, contact: Boolean): Address
+
+  """Update an attribute by name and value"""
+  updateAttribute(attributeId: ValidUUID!, value: ValidString!): Attribute
+
+  """Updates an email"""
+  updateEmail(emailId: ValidUUID!, address: New_Valid_Email, contact: Boolean): Email
+
+  """Updates a phone record"""
+  updatePhone(phoneId: ValidUUID!, number: ValidString, name: ValidString, contact: Boolean): UserPhone
+
+  """Update an attribute by name and value"""
+  updateUserAttribute(attributeId: ValidUUID!, value: ValidString!): Attribute
+}
+
+type RootQuery {
+  """Get user addresses"""
+  addresses(
+    """Number of records to retreive"""
+    first: NaturalNumber
+
+    """Cursor from where to start the list"""
+    after: NaturalNumber
+
+    """List of address names"""
+    names: [ValidString]
+
+    """List of address ids"""
+    address_ids: [ValidUUID]
+  ): AddressResultsType
+
+  """Get a user attributes by name"""
+  attributes(
+    """Number of records to retreive"""
+    first: NaturalNumber
+
+    """Cursor from where to start the list"""
+    after: NaturalNumber
+
+    """List of attribute names"""
+    names: [UserAttributesEnum]
+
+    """List of attribute id"""
+    attribute_ids: [ValidUUID]
+  ): AttributeResultsType
+
+  """Get a user emails by address"""
+  emails(
+    """Cursor from where to start the list"""
+    after: NaturalNumber
+
+    """List of email addresses"""
+    addresses: [New_Valid_Email]
+
+    """List of email ids"""
+    emailIds: [ValidUUID]
+
+    """Number of records to retreive"""
+    first: NaturalNumber
+  ): EmailResultsType
+
+  """Get all user phone records"""
+  phones(
+    """Cursor from where to start the list"""
+    after: NaturalNumber
+
+    """List of phone names"""
+    names: [ValidString]
+
+    """List of phone ids"""
+    phone_ids: [ValidUUID]
+
+    """Number of records to retreive"""
+    first: NaturalNumber
+  ): UserPhoneResultsType
+
+  """Get all policies created by a publisher"""
+  policies(
+    """List of policy ids"""
+    policyIds: [ValidUUID]
+
+    """List of policy names"""
+    names: [ValidString]
+
+    """Number of records to retreive"""
+    first: NaturalNumber
+
+    """Cursor from where to start the list"""
+    after: NaturalNumber
+
+    """Publisher id the creates the policies"""
+    publisherId: ValidUUID!
+  ): PolicyResultsType
+
+  """Get user information"""
+  user: User
+}
+
+type Token {
+  """This token is required for any access to the API."""
+  accessToken: String
+
+  """This token is required to refresh the access token provided at login."""
+  refresh_token: String
+}
+
+type User {
+  """Get user addresses"""
+  addresses(
+    """List of address names"""
+    names: [ValidString]
+
+    """List of address ids"""
+    address_ids: [ValidUUID]
+
+    """Number of records to retreive"""
+    first: NaturalNumber
+
+    """Cursor from where to start the list"""
+    after: NaturalNumber
+  ): AddressResultsType
+
+  """Get a user attributes by name"""
+  attributes(
+    """List of attribute names"""
+    names: [UserAttributesEnum]
+
+    """List of attribute id"""
+    attribute_ids: [ValidUUID]
+
+    """Number of records to retreive"""
+    first: NaturalNumber
+
+    """Cursor from where to start the list"""
+    after: NaturalNumber
+  ): AttributeResultsType
+  avatar: String
+
+  """Get a user emails by address"""
+  emails(
+    """List of email addresses"""
+    addresses: [New_Valid_Email]
+
+    """List of email ids"""
+    emailIds: [ValidUUID]
+
+    """Number of records to retreive"""
+    first: NaturalNumber
+
+    """Cursor from where to start the list"""
+    after: NaturalNumber
+  ): EmailResultsType
+
+  """Get all user phone records"""
+  phones(
+    """Number of records to retreive"""
+    first: NaturalNumber
+
+    """Cursor from where to start the list"""
+    after: NaturalNumber
+
+    """List of phone names"""
+    names: [ValidString]
+
+    """List of phone ids"""
+    phone_ids: [ValidUUID]
+  ): UserPhoneResultsType
+  registered: String
+  user_id: String
+  username: String
+}
+
+type UserAddressNodeType {
+  cursor: Int
+  node: Address
+}
+
+type UserAttributeNodeType {
+  cursor: Int
+  node: Attribute
+}
+
+enum UserAttributesEnum {
+  GENDER
+  DOB
+  FIRST_NAME
+  LAST_NAME
+}
+
+type UserEmailNodeType {
+  cursor: Int
+  node: Email
+}
+
+"""User phone number.  This number may be used as contact number"""
+type UserPhone {
+  contact: Boolean
+  createdOn: String
+  modifiedOn: String
+  name: String
+  number: String
+  phoneId: ValidUUID
+  verified: Boolean
+}
+
+type UserPhoneNodeType {
+  cursor: Int
+  node: UserPhone
+}
+
+type UserPhoneResultsType {
+  edges: [UserPhoneNodeType]
+  metrics: ConnectionMetrics
+  pageInfo: PageInfoType
+  totalCount: Int
+}
+
+"""
+This string cannot be empty or be composed of only spaces. Ex: ' ' and ''  will result in an error
+"""
+scalar ValidString
+
+"""This string cannot be empty and must be a UUID"""
+scalar ValidUUID
+

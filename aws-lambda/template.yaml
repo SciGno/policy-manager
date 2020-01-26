@@ -1,0 +1,27 @@
+AWSTemplateFormatVersion : '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: SciGno Policy API Lambda funcion.
+
+Resources:
+
+  UserAPI:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: main
+      Runtime: go1.x
+      Tracing: Active
+      Timeout: 20
+      Environment:
+        Variables:
+          DEBUG: true
+          GREMLIN_DEBUG: true
+          GREMLIN_DEBUG_FUNCTION: ""
+          RESOURCE_NAME: "us:aws:graphql"
+          DATABASE: "192.168.1.249:8182"
+          KEYSPACE: "POLICY"
+      Events:
+        MarketBin:
+          Type: Api
+          Properties:
+            Path: /graphql
+            Method: post

@@ -7,10 +7,10 @@ import (
 	"time"
 
 	"github.com/SermoDigital/jose/jws"
+	"github.com/scigno/policy-manager/logger"
 
 	"github.com/SermoDigital/jose/crypto"
 	"github.com/SermoDigital/jose/jwt"
-	"github.com/scigno/go-policy/serverless/logger"
 )
 
 // ContextKey type

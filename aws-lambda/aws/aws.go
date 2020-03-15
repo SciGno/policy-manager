@@ -5,11 +5,11 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/scigno/go-policy/serverless/auth"
-	"github.com/scigno/go-policy/serverless/config"
-	gql "github.com/scigno/go-policy/serverless/graphql"
-	"github.com/scigno/go-policy/serverless/gremlin"
-	"github.com/scigno/go-policy/serverless/logger"
+	"github.com/scigno/policy-manager/auth"
+	"github.com/scigno/policy-manager/config"
+	gql "github.com/scigno/policy-manager/graphql"
+	"github.com/scigno/policy-manager/gremlin"
+	"github.com/scigno/policy-manager/logger"
 
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"

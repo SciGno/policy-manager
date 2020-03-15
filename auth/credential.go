@@ -4,7 +4,7 @@ import (
 	"context"
 
 	"github.com/google/uuid"
-	"github.com/scigno/go-policy/serverless/session"
+	"github.com/scigno/policy-manager/session"
 )
 
 const (
